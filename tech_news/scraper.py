@@ -1,3 +1,4 @@
+from tech_news.database import create_news
 import requests
 import time
 from parsel import Selector
@@ -36,8 +37,6 @@ def scrape_next_page_link(html_content: str) -> str or None:
 
 
 # Requisito 4
-
-
 def scrape_noticia(html_content: str) -> dict:
     selector = Selector(html_content)
     noticia = {
@@ -76,7 +75,20 @@ def scrape_noticia(html_content: str) -> dict:
 
 
 # Requisito 5
-def get_tech_news(amount):
-    """Seu código deve vir aqui"""
-
-# inicia o projeto
+def get_tech_news(amount: int) -> list:
+    count = 0
+    next_page = "https://blog.betrybe.com/"
+    dict_list = []
+    while next_page and count < amount:
+        response = fetch(next_page)
+        links = scrape_novidades(response)
+        for link in links:
+            if count >= amount:
+                break
+            content = fetch(link)
+            dict = scrape_noticia(content)
+            dict_list.append(dict)
+            count += 1
+        next_page = scrape_next_page_link(response)
+    create_news(dict_list)
+    return dict_list
