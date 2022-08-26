@@ -1,4 +1,5 @@
 from tech_news.database import search_news
+import datetime
 
 
 # Requisito 6
@@ -13,7 +14,18 @@ def search_by_title(title):
 
 # Requisito 7
 def search_by_date(date):
-    """Seu código deve vir aqui"""
+    try:
+        data = datetime.datetime.strptime(date, '%Y-%m-%d')
+    except ValueError:
+        raise ValueError("Data inválida")
+    formated_date = data.strftime("%d/%m/%Y")
+    print(formated_date)
+    tuple_list = []
+    noticias = search_news({"timestamp": formated_date})
+    for noticia in noticias:
+        tuple_list.append((noticia["title"], noticia["url"]))
+    return tuple_list
+# https://stackoverflow.com/questions/16870663/how-do-i-validate-a-date-string-format-in-python
 
 
 # Requisito 8
