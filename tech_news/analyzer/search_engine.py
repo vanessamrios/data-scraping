@@ -42,4 +42,11 @@ def search_by_tag(tag):
 
 # Requisito 9
 def search_by_category(category):
-    """Seu código deve vir aqui"""
+    tuple_list = []
+    noticias = search_news(
+        {"category": {'$regex': category, '$options': 'i'}}
+    )
+    for noticia in noticias:
+        if (noticia not in tuple_list):
+            tuple_list.append((noticia["title"], noticia["url"]))
+    return tuple_list
